@@ -1,4 +1,5 @@
 #include "memory.h"
+#include "func.h"
 
 #define USE_CUDA_MEMALLOC 0
 #define USE_WC 1

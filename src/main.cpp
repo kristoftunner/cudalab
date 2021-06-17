@@ -7,12 +7,31 @@
 
 #include "omp.h"
 
+#include <IL/ilut.h>
+#include <IL/ilu.h>
+
+#include "emmintrin.h"
+#include "nmmintrin.h"
+
 #include "defs.h"
 #include "func.h"
 
 
-void main()
+int main()
 {
+	ilInit(); iluInit();
+	ILboolean ret;
+	ILuint ilImg=0;
+	ilGenImages(1, &ilImg);
+	ilBindImage(ilImg);
+    ret = ilLoadImage((const char*)("input.jpg"));
+	ILubyte* imgData = ilGetData(); 
+
+	int imgWidth = ilGetInteger(IL_IMAGE_WIDTH);
+	int imgHeight = ilGetInteger(IL_IMAGE_HEIGHT);
+	ILint imgOrigin = ilGetInteger(IL_ORIGIN_MODE);
+
+	printf("Input resolution: %4dx%4d\n", imgWidth, imgHeight);
 
 	int imgWidthF = imgWidth+FILTER_W-1;
 	int imgHeightF = imgHeight+FILTER_H-1;
@@ -111,5 +130,6 @@ for (int r=0; r<RUNS; r++)
 	ilEnable(IL_FILE_OVERWRITE);
     ilSaveImage((const char*)("output.jpg"));
 	ilDeleteImages(1, &ilImg);
-}
 
+	return 0;
+}

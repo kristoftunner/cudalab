@@ -21,7 +21,7 @@ __constant__ float filter_laplace_f[5][5] = {-1.0f, -1.0f, -1.0f, -1.0f, -1.0f,
                                              -1.0f, -1.0f, -1.0f, -1.0f, -1.0f};
 
 
-// Globális memóriát használó (triviális) megoldás
+// Globï¿½lis memï¿½riï¿½t hasznï¿½lï¿½ (triviï¿½lis) megoldï¿½s
 __global__ void kernel_conv_global(unsigned char* gInput, unsigned char* gOutput, int imgWidth, int imgWidthF)
 {
   int row = blockIdx.y * blockDim.y + threadIdx.y;
@@ -55,9 +55,9 @@ __global__ void kernel_conv_global(unsigned char* gInput, unsigned char* gOutput
   }
 }
 
-// Shared memóriát használó megoldás (1.)
-// Shared memória adattípus: unsigned char
-// Számítás adattípusa: integer
+// Shared memï¿½riï¿½t hasznï¿½lï¿½ megoldï¿½s (1.)
+// Shared memï¿½ria adattï¿½pus: unsigned char
+// Szï¿½mï¿½tï¿½s adattï¿½pusa: integer
 __global__ void kernel_conv_sh_uchar_int(unsigned char* gInput, unsigned char* gOutput, int imgWidth, int imgWidthF)
 {
   int row = blockIdx.y * blockDim.y + threadIdx.y;
@@ -108,10 +108,10 @@ __global__ void kernel_conv_sh_uchar_int(unsigned char* gInput, unsigned char* g
   }
 }
 
-// Shared memóriát használó megoldás (2.)
-// Shared memória adattípus: unsigned char
-// Számítás adattípusa: float
-// A töltés tömb indexelés helyett pointer + offset megoldással
+// Shared memï¿½riï¿½t hasznï¿½lï¿½ megoldï¿½s (2.)
+// Shared memï¿½ria adattï¿½pus: unsigned char
+// Szï¿½mï¿½tï¿½s adattï¿½pusa: float
+// A tï¿½ltï¿½s tï¿½mb indexelï¿½s helyett pointer + offset megoldï¿½ssal
 __global__ void kernel_conv_sh_uchar_float(unsigned char* gInput, unsigned char* gOutput, int imgWidth, int imgWidthF)
 {
 	int row = blockIdx.y * blockDim.y + threadIdx.y;
@@ -164,9 +164,9 @@ __global__ void kernel_conv_sh_uchar_float(unsigned char* gInput, unsigned char*
 	}
 }
 
-// Shared memóriát használó megoldás (3.)
-// Shared memória adattípus: float
-// Számítás adattípusa: float
+// Shared memï¿½riï¿½t hasznï¿½lï¿½ megoldï¿½s (3.)
+// Shared memï¿½ria adattï¿½pus: float
+// Szï¿½mï¿½tï¿½s adattï¿½pusa: float
 __global__ void kernel_conv_sh_float_float(unsigned char* gInput, unsigned char* gOutput, int imgWidth, int imgWidthF)
 {
 	int row = blockIdx.y * blockDim.y + threadIdx.y;
@@ -217,7 +217,7 @@ __global__ void kernel_conv_sh_float_float(unsigned char* gInput, unsigned char*
 	}
 }
 
-// Ugyanaz mint az elõbb, módosított blokk méretekkel (32x8) az olvasási shared memory bank konfliktus elkerüléséhez
+// Ugyanaz mint az elï¿½bb, mï¿½dosï¿½tott blokk mï¿½retekkel (32x8) az olvasï¿½si shared memory bank konfliktus elkerï¿½lï¿½sï¿½hez
 __global__ void kernel_conv_sh_float_float_nbc(unsigned char* gInput, unsigned char* gOutput, int imgWidth, int imgWidthF)
 {
 	int row = blockIdx.y * blockDim.y + threadIdx.y;
@@ -295,7 +295,7 @@ void cudaMain(int imgHeight, int imgWidth, int imgHeightF, int imgWidthF,
 	cudaMemcpy(gInput, imgSrc, size_in, cudaMemcpyHostToDevice); 
 
 	cudaDeviceSetCacheConfig(cudaFuncCachePreferShared);
-	s0 = time_measure(1);
+	s0 = 0;//time_measure(1);
 	for (int i = 0; i < KERNEL_RUNS; i++)
 	{
 		kernel_conv_global << <thrGrid, thrBlock >> >(gInput, gOutput, imgWidth, imgWidthF);
@@ -305,7 +305,7 @@ void cudaMain(int imgHeight, int imgWidth, int imgHeightF, int imgWidthF,
 		kernel_conv_sh_float_float_nbc << <thrGrid2, thrBlock2 >> >(gInput, gOutput, imgWidth, imgWidthF);
 	}
 	cudaThreadSynchronize();
-	e0 = time_measure(2);
+	e0 = 0;//time_measure(2);
 
     cudaMemcpy(imgDst, gOutput, size_out, cudaMemcpyDeviceToHost);
 	
